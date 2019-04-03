@@ -48,8 +48,15 @@
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  border: 1px solid #333;
+  border: 1px solid #666;
+  cursor: pointer;
 }
+.circle:hover{
+  background: #3ac0ff;
+}
+  .circle-click{
+    background: #3ac0ff;
+  }
   .pre-icon{
     position: absolute;
     top: 0;
@@ -91,6 +98,11 @@ export default {
     },
     listChoose: function (event) {
       this.photoPosition = $(event.target).attr('listId')
+      let listDot=$('.circle')
+      for(let i=0;i<listDot.length;i++){
+        $(listDot[i]).removeClass('circle-click')
+      }
+      $(event.target).addClass('circle-click')
       if (this.photoPosition === 5) {
         $('.next-icon').hide(1000)
       }
