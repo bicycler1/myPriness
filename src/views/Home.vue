@@ -8,12 +8,12 @@
       </div>
     </div>
     <div class="list-dot">
-      <li class="circle" listId="0" @click="listChoose($event)"></li>
-      <li class="circle" listId="1" @click="listChoose($event)"></li>
-      <li class="circle" listId="2" @click="listChoose($event)"></li>
-      <li class="circle" listId="3"></li>
-      <li class="circle" listId="4"></li>
-      <li class="circle" listId="5"></li>
+      <li class="circle circle-border" listId="0" @click="listChoose($event)"></li>
+      <li class="circle circle-border" listId="1" @click="listChoose($event)"></li>
+      <li class="circle circle-border" listId="2" @click="listChoose($event)"></li>
+      <li class="circle circle-border" listId="3"></li>
+      <li class="circle circle-border" listId="4"></li>
+      <li class="circle circle-border" listId="5"></li>
     </div>
     <div class="pre-icon">
       <i class="fa fa-chevron-up fa-4x"></i>
@@ -42,14 +42,16 @@
   justify-content: space-around;
   align-items: center;
   padding: 6px;
-  height: 90px;
+  height: 110px;
 }
 .circle{
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  border: 1px solid #666;
   cursor: pointer;
+}
+.circle-border{
+  border: 1px solid #eee;
 }
 .circle:hover{
   background: #3ac0ff;
@@ -101,7 +103,9 @@ export default {
       let listDot=$('.circle')
       for(let i=0;i<listDot.length;i++){
         $(listDot[i]).removeClass('circle-click')
+        $(listDot[i]).addClass('circle-border')
       }
+      $(event.target).removeClass('circle-border')
       $(event.target).addClass('circle-click')
       if (this.photoPosition === 5) {
         $('.next-icon').hide(1000)
