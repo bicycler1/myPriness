@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="list-dot">
-      <li class="circle circle-border" listId="0" @click="listChoose($event)"></li>
+      <li class="circle circle-click" listId="0" @click="listChoose($event)"></li>
       <li class="circle circle-border" listId="1" @click="listChoose($event)"></li>
       <li class="circle circle-border" listId="2" @click="listChoose($event)"></li>
       <li class="circle circle-border" listId="3"></li>
@@ -107,15 +107,18 @@ export default {
         top: -this.photoPosition * 100 + '%'
       }, 1000)
     },
-    listChoose: function (event) {
-      this.photoPosition = $(event.target).attr('listId')
+    listDotStyle: function (number) {
       let listDot = $('.circle')
       for (let i = 0; i < listDot.length; i++) {
         $(listDot[i]).removeClass('circle-click')
         $(listDot[i]).addClass('circle-border')
       }
-      $(event.target).removeClass('circle-border')
-      $(event.target).addClass('circle-click')
+      $(listDot[number]).removeClass('circle-border')
+      $(listDot[number]).addClass('circle-click')
+    },
+    listChoose: function (event) {
+      this.photoPosition = $(event.target).attr('listId')
+      this.listDotStyle(this.photoPosition)
       if (this.photoPosition === 5) {
         $('.next-icon').hide(1000)
       }
@@ -133,8 +136,10 @@ export default {
       $(document).mousewheel(function (event, delta, deltaX, deltaY) {
         if (delta < 0) {
           _this.nextPhoto()
+          _this.listDotStyle(_this.photoPosition)
         } else if (delta > 0) {
           _this.prePhoto()
+          _this.listDotStyle(_this.photoPosition)
         }
       })
     }
