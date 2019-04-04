@@ -5,6 +5,7 @@ import store from './store'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min'
 import  'font-awesome/css/font-awesome.min.css'
+import  'jquery-mousewheel'
 Vue.config.productionTip = false
 
 new Vue({

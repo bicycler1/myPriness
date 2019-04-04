@@ -36,22 +36,22 @@
 .list-dot{
   position: absolute;
   top: 50%;
-  right: 0;
+  right: 6px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
   padding: 6px;
-  height: 110px;
+  height: 200px;
 }
 .circle{
-  width: 8px;
-  height: 8px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   cursor: pointer;
 }
 .circle-border{
-  border: 1px solid #eee;
+  border: 2px solid #eee;
 }
 .circle:hover{
   background: #3ac0ff;
@@ -98,10 +98,19 @@ export default {
         top: -this.photoPosition * 100 + '%'
       }, 1000)
     },
+    prePhoto: function () {
+      this.photoPosition--
+      if (this.photoPosition === 0) {
+        $('.pre-icon').hide(1000)
+      }
+      $('.warp').animate({
+        top: -this.photoPosition * 100 + '%'
+      }, 1000)
+    },
     listChoose: function (event) {
       this.photoPosition = $(event.target).attr('listId')
-      let listDot=$('.circle')
-      for(let i=0;i<listDot.length;i++){
+      let listDot = $('.circle')
+      for (let i = 0; i < listDot.length; i++) {
         $(listDot[i]).removeClass('circle-click')
         $(listDot[i]).addClass('circle-border')
       }
@@ -118,10 +127,21 @@ export default {
       if (this.photoPosition === 0) {
         $('.pre-icon').fadeToggle(1000)
       }
+    },
+    mouseRoll: function () {
+      let _this = this
+      $(document).mousewheel(function (event, delta, deltaX, deltaY) {
+        if (delta < 0) {
+          _this.nextPhoto()
+        } else if (delta > 0) {
+          _this.prePhoto()
+        }
+      })
     }
   },
   mounted: function () {
     this.init()
+    this.mouseRoll()
   }
 }
 </script>
