@@ -5,15 +5,18 @@
         <img class="vw-100 vh-100" src="@/assets/HomeImgs/photos1.jpg" alt="">
         <img class="vw-100 vh-100" src="@/assets/HomeImgs/photos1.jpg" alt="">
         <img class="vw-100 vh-100" src="@/assets/HomeImgs/photos1.jpg" alt="">
+        <img class="vw-100 vh-100" src="@/assets/HomeImgs/photos1.jpg" alt="">
+        <img class="vw-100 vh-100" src="@/assets/HomeImgs/photos1.jpg" alt="">
+        <img class="vw-100 vh-100" src="@/assets/HomeImgs/photos1.jpg" alt="">
       </div>
     </div>
     <div class="list-dot">
       <li class="circle circle-click" listId="0" @click="listChoose($event)"></li>
       <li class="circle circle-border" listId="1" @click="listChoose($event)"></li>
       <li class="circle circle-border" listId="2" @click="listChoose($event)"></li>
-      <li class="circle circle-border" listId="3"></li>
-      <li class="circle circle-border" listId="4"></li>
-      <li class="circle circle-border" listId="5"></li>
+      <li class="circle circle-border" listId="3" @click="listChoose($event)">></li>
+      <li class="circle circle-border" listId="4" @click="listChoose($event)">></li>
+      <li class="circle circle-border" listId="5" @click="listChoose($event)">></li>
     </div>
     <div class="pre-icon">
       <i class="fa fa-chevron-up fa-4x"></i>
@@ -63,6 +66,7 @@
     position: absolute;
     top: 0;
     left: 50%;
+    display: none;
     padding: 16px;
     margin-left: -48px;
     transform: scale(1.2,0.9);
@@ -85,14 +89,15 @@ export default {
   name: 'home',
   data () {
     return {
-      photoPosition: 0
+      photoPosition: 0,
+      timer: null
     }
   },
   methods: {
     nextPhoto: function () {
       this.photoPosition++
       if (this.photoPosition === 5) {
-        $('.next-icon').hide(1000)
+        $('.next-icon').fadeToggle(1000)
       }
       $('.warp').animate({
         top: -this.photoPosition * 100 + '%'
@@ -100,9 +105,6 @@ export default {
     },
     prePhoto: function () {
       this.photoPosition--
-      if (this.photoPosition === 0) {
-        $('.pre-icon').hide(1000)
-      }
       $('.warp').animate({
         top: -this.photoPosition * 100 + '%'
       }, 1000)
@@ -120,33 +122,57 @@ export default {
       this.photoPosition = $(event.target).attr('listId')
       this.listDotStyle(this.photoPosition)
       if (this.photoPosition === 5) {
-        $('.next-icon').hide(1000)
+        $('.next-icon').fadeToggle(1000)
       }
       $('.warp').animate({
         top: -this.photoPosition * 100 + '%'
       }, 1000)
     },
-    init: function () {
-      if (this.photoPosition === 0) {
-        $('.pre-icon').fadeToggle(1000)
+    mouseRoll: function (delta) {
+      let _this = this
+      if (delta < 0) {
+        if (_this.photoPosition === 5) {
+
+        } else {
+          _this.nextPhoto()
+          _this.listDotStyle(this.photoPosition)
+        }
+      } else if (delta > 0) {
+        if (_this.photoPosition === 0) {
+
+        } else {
+          _this.prePhoto()
+          _this.listDotStyle(this.photoPosition)
+        }
       }
     },
-    mouseRoll: function () {
-      let _this = this
-      $(document).mousewheel(function (event, delta, deltaX, deltaY) {
-        if (delta < 0) {
-          _this.nextPhoto()
-          _this.listDotStyle(_this.photoPosition)
-        } else if (delta > 0) {
-          _this.prePhoto()
-          _this.listDotStyle(_this.photoPosition)
+    throttle: function (method, text, delay, duration) {
+      console.log(this.timer)
+      let begin = new Date()
+      let _this=this
+      return function () {
+        let context = this
+        let current = new Date()
+        clearTimeout(_this.timer)
+        if (current - begin >= duration) {
+          method.call(context, text)
+          begin = current
+        } else {
+          console.log(_this.timer)
+          _this.timer = setTimeout(function () {
+            method.call(context, text)
+          }, delay)
+          console.log(_this.timer)
         }
-      })
+      }
     }
   },
   mounted: function () {
-    this.init()
-    this.mouseRoll()
+    let _this = this
+    $(document).mousewheel(function (event, delta) {
+      console.log(delta)
+      _this.throttle(_this.mouseRoll, delta, 500, 1000)()
+    })
   }
 }
 </script>
