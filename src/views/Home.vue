@@ -90,7 +90,12 @@ export default {
   data () {
     return {
       photoPosition: 0,
-      timer: null
+      globalValues: {
+        timer: null,
+        begin: null,
+        durationNumber: 0,
+        number: 0
+      }
     }
   },
   methods: {
@@ -129,49 +134,53 @@ export default {
       }, 1000)
     },
     mouseRoll: function (delta) {
-      let _this = this
       if (delta < 0) {
-        if (_this.photoPosition === 5) {
+        if (this.photoPosition === 5) {
 
         } else {
-          _this.nextPhoto()
-          _this.listDotStyle(this.photoPosition)
+          this.nextPhoto()
+          this.listDotStyle(this.photoPosition)
         }
       } else if (delta > 0) {
-        if (_this.photoPosition === 0) {
+        if (this.photoPosition === 0) {
 
         } else {
-          _this.prePhoto()
-          _this.listDotStyle(this.photoPosition)
+          this.prePhoto()
+          this.listDotStyle(this.photoPosition)
         }
       }
     },
     throttle: function (method, text, delay, duration) {
-      console.log(this.timer)
-      let begin = new Date()
-      let _this=this
+      let _this = this
       return function () {
-        let context = this
+        clearTimeout(_this.globalValues.timer)
         let current = new Date()
-        clearTimeout(_this.timer)
-        if (current - begin >= duration) {
-          method.call(context, text)
-          begin = current
+        console.log(_this.globalValues.begin)
+        if (current - _this.globalValues.begin >= duration) {
+          _this.globalValues.begin = current
+          _this.globalValues.durationNumber++
+          method(text)
         } else {
-          console.log(_this.timer)
-          _this.timer = setTimeout(function () {
-            method.call(context, text)
-          }, delay)
-          console.log(_this.timer)
+          if (_this.globalValues.durationNumber) {
+            _this.globalValues.number++
+            if (_this.globalValues.number <= 2) {
+
+            } else {
+              _this.globalValues.timer = setTimeout(function () {
+                method(text)
+              }, delay)
+              _this.globalValues.durationNumber = 0
+            }
+          }
         }
       }
     }
   },
   mounted: function () {
     let _this = this
+    this.globalValues.begin = new Date()
     $(document).mousewheel(function (event, delta) {
-      console.log(delta)
-      _this.throttle(_this.mouseRoll, delta, 500, 1000)()
+      _this.throttle(_this.mouseRoll, delta, 300, 1300)()
     })
   }
 }
